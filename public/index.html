@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head><title>Notes</title></head>
+<body>
+    <input id="title" placeholder="Title" />
+    <textarea id="content" placeholder="Content"></textarea>
+    <button onclick="save()">Save</button>
+    <ul id="list"></ul>
+
+    <script>
+        async function save() {
+        const title = document.getElementById("title").value;
+        const content = document.getElementById("content").value;
+        await fetch("/api/notes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, content })
+        });
+        loadList();
+        }
+
+        async function loadList() {
+        const notes = await fetch("/api/notes").then(r => r.json());
+        document.getElementById("list").innerHTML =
+            notes.map(n => `<li><b>${n.title}</b>: ${n.content}</li>`).join("");
+        }
+
+        loadList();
+    </script>
+</body>
+</html>
