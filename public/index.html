@@ -1,31 +1,28 @@
 <!DOCTYPE html>
-<html>
-<head><title>Notes</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notes</title>
+  <link rel="stylesheet" href="/css/style.css" />
+</head>
 <body>
-    <input id="title" placeholder="Title" />
-    <textarea id="content" placeholder="Content"></textarea>
-    <button onclick="save()">Save</button>
-    <ul id="list"></ul>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span>Notes</span>
+        <button id="newNoteBtn" title="New note">+</button>
+      </div>
+      <ul id="noteList" class="note-list"></ul>
+    </aside>
 
-    <script>
-        async function save() {
-        const title = document.getElementById("title").value;
-        const content = document.getElementById("content").value;
-        await fetch("/api/notes", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, content })
-        });
-        loadList();
-        }
+    <main class="editor">
+      <textarea id="content" class="content-area" placeholder="Start writing..."></textarea>
+      <div class="tags-bar">
+        <input id="tagsInput" class="tags-input" placeholder="tags, comma, separated" />
+      </div>
+    </main>
+  </div>
 
-        async function loadList() {
-        const notes = await fetch("/api/notes").then(r => r.json());
-        document.getElementById("list").innerHTML =
-            notes.map(n => `<li><b>${n.title}</b>: ${n.content}</li>`).join("");
-        }
-
-        loadList();
-    </script>
+  <script src="/js/app.js"></script>
 </body>
 </html>

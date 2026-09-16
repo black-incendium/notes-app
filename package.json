@@ -5,9 +5,10 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "tsx src/index.ts",
-    "build": "tsc",
-    "start:built": "node dist/index.js"
+        "build:client": "tsc -p tsconfig.client.json",
+        "start": "npm run build:client && tsx src/index.ts",
+        "build": "npm run build:client && tsc",
+        "start:built": "node dist/index.js"
     },
     "keywords": [],
     "author": "",

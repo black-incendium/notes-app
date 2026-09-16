@@ -1,6 +1,6 @@
 import express from "express";
 import path from "path";
-import { addNote, loadNotes } from "./notes";
+import { addNote, loadNotes, updateNote, deleteNote } from "./notes";
 
 export function createApp() {
   const app = express();
@@ -12,9 +12,24 @@ export function createApp() {
   });
 
   app.post("/api/notes", (req, res) => {
-    const { title, content } = req.body;
-    const note = addNote(title, content);
+    const { title, content, tags } = req.body;
+    const note = addNote(title ?? "Untitled", content ?? "", tags ?? {});
     res.json(note);
+  });
+
+  app.put("/api/notes/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const { title, content, tags } = req.body;
+    const note = updateNote(id, { title, content, tags });
+    if (!note) return res.status(404).json({ error: "Note not found" });
+    res.json(note);
+  });
+
+  app.delete("/api/notes/:id", (req, res) => {
+    const id = Number(req.params.id);
+    const ok = deleteNote(id);
+    if (!ok) return res.status(404).json({ error: "Note not found" });
+    res.status(204).send();
   });
 
   return app;
